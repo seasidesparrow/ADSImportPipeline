@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import cgi
 import os
 import sys
 import datetime
@@ -251,13 +252,8 @@ def main(*args):
                     with open(f, 'rU') as fp:
                         try:
                             output = parser.parse(fp)
-                            abs_list = output['abstract']
-                            new_abs_list = []
-                            for aa in abs_list:
-                                new_abs_list.append(aa.encode('ascii', 'htmlcharref'))
-                            output['abstract'] = new_abs_list
+                            output['abstract'] = cgi.escape(output['abstract']).encode('ascii', 'xmlcharrefreplace')
                             parsed_records.append(output)
-                            # parsed_records.append(parser.parse(fp))
                         except:
                             logger.error("bad record: %s from arxiv ingest" % (f))
 
