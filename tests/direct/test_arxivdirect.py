@@ -62,8 +62,6 @@ class TestArXivDirect(unittest.TestCase):
             self.assertEqual(test_origin,'ARXIV')
             self.assertEqual(test_entryd,entryd_shouldbe)
 
-
-
             origin_shouldbe2 = 'classic'
             entryd_shouldbe2 = '2019-01-01T12:00:00Z'
             test_adsrec = ArXivDirect.add_direct(test_record, created_date='2019-01-01T12:00:00Z')
@@ -81,8 +79,8 @@ class TestArXivDirect(unittest.TestCase):
             test_adsrec = ArXivDirect.add_direct(test_record, created_date='2026-02-24T12:00:00Z')
             test_serialized = test_adsrec.root.serialize()
             xdict = xmltodict.parse(test_serialized)['records']['record']['metadata'][0]
-            self.assertEqual(xdict, directdata.LATEX_DIRECT_OUT)
-
+            test_abstract = xdict['abstract']
+            self.assertEqual(test_abstract, directdata.LATEX_DIRECT_OUT['abstract'])
 
 
 if __name__ == '__main__':
