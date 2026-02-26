@@ -75,7 +75,7 @@ class TestArXivDirect(unittest.TestCase):
             # now, testing patch for HTML &lt;/&gt; in latex:
             origin_shouldbe3 = "ARXIV"
             entryd_shouldbe3 = "2026-02-24T12:00:00Z"
-            test_record = direct.LATEX_DIRECT_IN
+            test_record = directdata.LATEX_DIRECT_IN
             test_adsrec = ArXivDirect.add_direct(test_record, created_date='2026-02-24T12:00:00Z')
             test_serialized = test_adsrec.root.serialize()
             xdict = xmltodict.parse(test_serialized)['records']['record']['metadata'][0]
