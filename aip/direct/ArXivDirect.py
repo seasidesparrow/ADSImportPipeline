@@ -3,6 +3,7 @@
 #  uses libxml2 via virtualenv --system-site-packages
 #  and adspy via mount of /proj
 
+import cgi
 import sys
 from datetime import datetime
 try:
@@ -20,6 +21,16 @@ except ImportError:
     except ImportError as e:
         print 'Unable to import ads libraries: {}'.format(e)
 
+def latex_entities(text_field):
+    # arxiv records come in with html-escaped &gt;/&lt; and must be
+    # kept that way for latex rendering (title & abstract only)
+    try:
+        if "$" in text_field and ("<" in text_field or ">" in text_field):
+           new_text_field = cgi.escape(text_field).encode("ascii", "xmlcharrefreplace")
+           return new_text_field
+    except:
+        pass
+    return text_field
 
 def add_direct(record, json_timestamp=None, created_date=None,
                origin=None, matched_preprint=False, fulltext=None):
@@ -64,9 +75,11 @@ def add_direct(record, json_timestamp=None, created_date=None,
     ads_ex.add_dates(adsr.current_abstract, dates)
 
     title = record['title'].replace('\n ','')
+    title = latex_entities(title)
     ads_ex.xml_node(adsr.current_abstract, 'title', title)
 
     abstract_field = record['abstract']
+    abstract_field = latex_entities(abstract_field)
     abstract_field = ads_ex.UNICODE_HANDLER.remove_control_chars(abstract_field)
     try:
         abstract_field = ads_ex.UNICODE_HANDLER.ent2xml(abstract_field)

@@ -252,7 +252,6 @@ def main(*args):
                     with open(f, 'rU') as fp:
                         try:
                             output = parser.parse(fp)
-                            output['abstract'] = cgi.escape(output['abstract']).encode('ascii', 'xmlcharrefreplace')
                             parsed_records.append(output)
                         except:
                             logger.error("bad record: %s from arxiv ingest" % (f))
