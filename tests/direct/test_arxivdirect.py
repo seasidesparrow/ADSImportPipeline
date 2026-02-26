@@ -27,7 +27,7 @@ class TestArXivDirect(unittest.TestCase):
 
     def setUp(self):
         unittest.TestCase.setUp(self)
-        self.proj_home = os.path.join(os.path.dirname(__file__), '../..')
+        self.proj_home = os.path.join(os.path.dirname(__file__), ' ../..')
         self._app = tasks.app
         self.app = app_module.ADSImportPipelineCelery('test', local_config={
             'SQLALCHEMY_URL': 'sqlite:///',
@@ -73,6 +73,15 @@ class TestArXivDirect(unittest.TestCase):
             test_entryd = xdict['creation_time']
 #           self.assertEqual(test_origin,'classic')
             self.assertEqual(test_entryd,entryd_shouldbe2)
+
+            # now, testing patch for HTML &lt;/&gt; in latex:
+            origin_shouldbe3 = "ARXIV"
+            entryd_shouldbe3 = "2026-02-24T12:00:00Z"
+            test_record = direct.LATEX_DIRECT_IN
+            test_adsrec = ArXivDirect.add_direct(test_record, created_date='2026-02-24T12:00:00Z')
+            test_serialized = test_adsrec.root.serialize()
+            xdict = xmltodict.parse(test_serialized)['records']['record']['metadata'][0]
+            self.assertEqual(xdict, directdata.LATEX_DIRECT_OUT)
 
 
 
