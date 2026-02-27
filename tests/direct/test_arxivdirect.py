@@ -62,8 +62,6 @@ class TestArXivDirect(unittest.TestCase):
             self.assertEqual(test_origin,'ARXIV')
             self.assertEqual(test_entryd,entryd_shouldbe)
 
-
-
             origin_shouldbe2 = 'classic'
             entryd_shouldbe2 = '2019-01-01T12:00:00Z'
             test_adsrec = ArXivDirect.add_direct(test_record, created_date='2019-01-01T12:00:00Z')
@@ -74,6 +72,15 @@ class TestArXivDirect(unittest.TestCase):
 #           self.assertEqual(test_origin,'classic')
             self.assertEqual(test_entryd,entryd_shouldbe2)
 
+            # now, testing patch for HTML &lt;/&gt; in latex:
+            origin_shouldbe3 = "ARXIV"
+            entryd_shouldbe3 = "2026-02-24T12:00:00Z"
+            test_record = directdata.LATEX_DIRECT_IN
+            test_adsrec = ArXivDirect.add_direct(test_record, created_date='2026-02-24T12:00:00Z')
+            test_serialized = test_adsrec.root.serialize()
+            xdict = xmltodict.parse(test_serialized)['records']['record']['metadata'][0]
+            test_abstract = xdict['abstract']
+            self.assertEqual(test_abstract, directdata.LATEX_DIRECT_OUT['abstract'])
 
 
 if __name__ == '__main__':
