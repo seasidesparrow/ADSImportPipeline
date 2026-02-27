@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import cgi
 import os
 import sys
 import datetime
@@ -251,8 +250,7 @@ def main(*args):
                 for f in reclist:
                     with open(f, 'rU') as fp:
                         try:
-                            output = parser.parse(fp)
-                            parsed_records.append(output)
+                            parsed_records.append(parser.parse(fp))
                         except:
                             logger.error("bad record: %s from arxiv ingest" % (f))
 
